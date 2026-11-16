@@ -1,0 +1,66 @@
+plugins {
+    id 'com.android.application'
+}
+
+// Версию GeckoView подставляет автосборка (см. .github/workflows/android.yml) в gradle.properties
+def geckoVersion = project.findProperty("geckoVersion")
+def geckoArtifact = project.findProperty("geckoArtifact") ?: "geckoview"
+if (!geckoVersion) {
+    throw new GradleException("Не задана версия GeckoView (geckoVersion). Запусти сборку через GitHub Actions " +
+            "или добавь в gradle.properties строки geckoVersion=... и geckoArtifact=geckoview")
+}
+def compileSdkVer = (project.findProperty("compileSdkVersion") ?: "36") as Integer
+def keystoreFile = file("release.jks")
+
+android {
+    namespace 'app.darkcrown.browser'
+    compileSdk compileSdkVer
+
+    defaultConfig {
+        applicationId "app.darkcrown.browser"
+        minSdk 26
+        targetSdk 34
+        versionCode 1
+        versionName "1.0.0"
+        ndk {
+            abiFilters 'arm64-v8a', 'armeabi-v7a'
+        }
+    }
+
+    signingConfigs {
+        release {
+            if (keystoreFile.exists()) {
+                storeFile keystoreFile
+                storePassword "darkcrown1"
+                keyAlias "dc"
+                keyPassword "darkcrown1"
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig keystoreFile.exists() ? signingConfigs.release : signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+        encoding "UTF-8"
+    }
+
+    packaging {
+        jniLibs {
+            useLegacyPackaging = true
+        }
+        resources {
+            excludes += ['META-INF/AL2.0', 'META-INF/LGPL2.1']
+        }
+    }
+}
+
+dependencies {
+    implementation "org.mozilla.geckoview:${geckoArtifact}:${geckoVersion}"
+}

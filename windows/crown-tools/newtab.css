@@ -1,0 +1,24 @@
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  background: radial-gradient(ellipse at 50% 30%, #101010 0%, #000000 60%);
+  color: #e8e6e3;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  display: flex; align-items: center; justify-content: center;
+}
+main { width: min(560px, 90vw); text-align: center; }
+.logo { width: 170px; height: 170px; object-fit: contain; filter: drop-shadow(0 0 24px rgba(255,255,255,.08)); }
+h1 { margin: 6px 0 28px; font-weight: 300; letter-spacing: .5em; font-size: 22px; padding-left: .5em; }
+form input {
+  width: 100%; padding: 14px 20px; font-size: 16px; color: inherit;
+  background: #0a0a0a; border: 1px solid #1f1f1f; border-radius: 12px; outline: none;
+}
+form input:focus { border-color: #e8e6e3; box-shadow: 0 0 0 1px #e8e6e3; }
+.actions { margin-top: 22px; display: flex; gap: 12px; justify-content: center; }
+button {
+  padding: 10px 18px; font-size: 14px; color: inherit; cursor: pointer;
+  background: #0a0a0a; border: 1px solid #1f1f1f; border-radius: 10px;
+}
+button:hover { border-color: #e8e6e3; }
+button.danger:hover { border-color: #e11d48; color: #ff5c7c; }
+.hint { margin-top: 26px; font-size: 12px; opacity: .45; }

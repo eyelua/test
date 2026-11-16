@@ -1,0 +1,98 @@
+name: Build Dark Crown for Android
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ['**']
+    paths:
+      - 'android/**'
+      - '.github/workflows/android.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: android
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.13'
+          build-root-directory: android
+
+      - name: Find latest GeckoView
+        shell: bash
+        run: |
+          set -e
+          base=https://maven.mozilla.org/maven2/org/mozilla/geckoview
+          found=0
+          for art in geckoview geckoview-omni; do
+            if curl -fsSL "$base/$art/maven-metadata.xml" -o meta.xml; then
+              ver=$(grep -oP '(?<=<release>)[^<]+' meta.xml | head -1 || true)
+              [ -z "$ver" ] && ver=$(grep -oP '(?<=<latest>)[^<]+' meta.xml | head -1 || true)
+              [ -z "$ver" ] && ver=$(grep -oP '(?<=<version>)[^<]+' meta.xml | tail -1 || true)
+              if [ -n "$ver" ]; then
+                echo "GeckoView: $art $ver"
+                printf '\ngeckoArtifact=%s\ngeckoVersion=%s\n' "$art" "$ver" >> gradle.properties
+                found=1
+                break
+              fi
+            fi
+          done
+          if [ "$found" != "1" ]; then
+            echo "Не удалось определить версию GeckoView на maven.mozilla.org"
+            exit 1
+          fi
+
+      - name: Prepare Android SDK
+        shell: bash
+        run: |
+          SDKM="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          yes | "$SDKM" --licenses > /dev/null || true
+          "$SDKM" "platforms;android-36" "build-tools;36.0.0" > /dev/null || true
+
+      - name: Create signing key
+        shell: bash
+        run: |
+          if [ ! -f app/release.jks ]; then
+            keytool -genkeypair -keystore app/release.jks -storepass darkcrown1 -keypass darkcrown1 \
+              -alias dc -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Dark Crown"
+          fi
+
+      - name: Build APK
+        shell: bash
+        run: |
+          set -o pipefail
+          : > build.log
+          ok=0
+          for sdk in 36 37; do
+            echo "=== compileSdk $sdk ===" | tee -a build.log
+            if gradle --no-daemon --stacktrace assembleRelease -PcompileSdkVersion=$sdk 2>&1 | tee -a build.log; then
+              ok=1
+              break
+            fi
+            grep -q "compile against version" build.log || break
+          done
+          [ "$ok" = "1" ]
+          cp app/build/outputs/apk/release/app-release.apk DarkCrown.apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: DarkCrown-APK
+          path: android/DarkCrown.apk
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-build-log
+          path: android/build.log
+          if-no-files-found: ignore

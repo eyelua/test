@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dark Crown</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: radial-gradient(ellipse at 50% 30%, #101010 0%, #000000 60%);
+    color: #e8e6e3;
+    font-family: system-ui, sans-serif;
+    display: flex; align-items: center; justify-content: center;
+  }
+  main { width: min(480px, 88vw); text-align: center; }
+  img { width: 150px; height: 150px; object-fit: contain; }
+  h1 { margin: 6px 0 26px; font-weight: 300; letter-spacing: .45em; font-size: 20px; padding-left: .45em; }
+  input {
+    width: 100%; padding: 14px 18px; font-size: 16px; color: inherit;
+    background: #0a0a0a; border: 1px solid #1f1f1f; border-radius: 12px; outline: none;
+  }
+  input:focus { border-color: #d4af37; }
+  p { margin-top: 24px; font-size: 12px; opacity: .45; }
+</style>
+</head>
+<body>
+<main>
+  <img src="logo.png" alt="">
+  <h1>DARK CROWN</h1>
+  <form action="https://duckduckgo.com/" method="get" autocomplete="off">
+    <input type="search" name="q" placeholder="Поиск в DuckDuckGo" autocapitalize="off">
+  </form>
+  <p>Приватный режим: ничего не сохраняется на устройстве</p>
+</main>
+</body>
+</html>

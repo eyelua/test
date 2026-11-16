@@ -1,0 +1,57 @@
+{
+  "manifest_version": 2,
+  "name": "Crown Tools",
+  "version": "1.2.0",
+  "description": "Функции Dark Crown Browser: стартовая страница, кнопка паники, быстрая очистка, скрыть окна, автоочистка.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "crowntools@darkcrown.local"
+    }
+  },
+  "permissions": [
+    "browsingData",
+    "tabs",
+    "notifications",
+    "storage",
+    "idle"
+  ],
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  },
+  "browser_action": {
+    "default_title": "Кнопка паники (Ctrl+Shift+K)",
+    "default_icon": {
+      "48": "icons/icon-48.png",
+      "96": "icons/icon-96.png"
+    }
+  },
+  "icons": {
+    "48": "icons/icon-48.png",
+    "96": "icons/icon-96.png"
+  },
+  "commands": {
+    "panic": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+K"
+      },
+      "description": "Кнопка паники: стереть данные и закрыть все окна"
+    },
+    "quick-clean": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+L"
+      },
+      "description": "Быстрая очистка: куки и кэш без закрытия вкладок"
+    },
+    "boss-key": {
+      "suggested_key": {
+        "default": "Alt+Shift+H"
+      },
+      "description": "Скрыть все окна браузера"
+    }
+  }
+}

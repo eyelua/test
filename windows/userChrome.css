@@ -1,0 +1,117 @@
+@import url("accent.css");
+@import url("logo.css");
+
+/* Dark Crown Browser: полностью чёрный интерфейс. Цвет акцента задаётся в accent.css */
+
+:root {
+  --dc-bg: #000000;
+  --dc-surface: #050505;
+  --dc-raised: #0d0d0d;
+  --dc-tab: #161616;
+  --dc-hover: #1a1a1a;
+  --dc-border: #1f1f1f;
+  --dc-text: #e8e6e3;
+  --dc-radius: 10px;
+
+  --toolbar-bgcolor: var(--dc-surface) !important;
+  --toolbar-color: var(--dc-text) !important;
+  --toolbox-bgcolor: var(--dc-bg) !important;
+  --toolbox-bgcolor-inactive: var(--dc-bg) !important;
+  --toolbox-textcolor: var(--dc-text) !important;
+  --toolbox-textcolor-inactive: #9a9a9a !important;
+  --toolbar-field-background-color: var(--dc-raised) !important;
+  --toolbar-field-focus-background-color: var(--dc-raised) !important;
+  --toolbar-field-color: var(--dc-text) !important;
+  --toolbar-field-focus-color: var(--dc-text) !important;
+  --toolbar-field-border-color: var(--dc-border) !important;
+  --urlbar-box-bgcolor: var(--dc-raised) !important;
+  --urlbar-box-hover-bgcolor: var(--dc-tab) !important;
+  --toolbarbutton-hover-background: var(--dc-hover) !important;
+  --toolbarbutton-active-background: var(--dc-tab) !important;
+  --tab-selected-bgcolor: var(--dc-tab) !important;
+  --tab-selected-textcolor: var(--dc-text) !important;
+  --tab-loading-fill: var(--dc-accent, #d4af37) !important;
+  --lwt-accent-color: var(--dc-bg) !important;
+  --lwt-accent-color-inactive: var(--dc-bg) !important;
+  --lwt-text-color: var(--dc-text) !important;
+  --lwt-header-image: none !important;
+  --lwt-additional-images: none !important;
+  --sidebar-background-color: var(--dc-bg) !important;
+  --sidebar-text-color: var(--dc-text) !important;
+  --sidebar-border-color: var(--dc-border) !important;
+  --tabpanel-background-color: var(--dc-bg) !important;
+  --arrowpanel-background: var(--dc-surface) !important;
+  --arrowpanel-color: var(--dc-text) !important;
+  --arrowpanel-border-color: var(--dc-border) !important;
+  --panel-background: var(--dc-surface) !important;
+  --panel-color: var(--dc-text) !important;
+  --panel-border-color: var(--dc-border) !important;
+  --chrome-content-separator-color: var(--dc-border) !important;
+  --focus-outline-color: var(--dc-accent, #d4af37) !important;
+  --tab-selected-outline-color: var(--dc-accent, #d4af37) !important;
+  --tab-selected-shadow: none !important;
+}
+
+/* Все панели и боковая панель вкладок: чистый чёрный, без градиентов и картинок */
+#navigator-toolbox, #titlebar, #TabsToolbar, #toolbar-menubar, #PersonalToolbar,
+#sidebar-main, #sidebar-box, #sidebar-header, #sidebar-splitter,
+#tabbrowser-tabs, #vertical-tabs {
+  background-color: var(--dc-bg) !important;
+  background-image: none !important;
+  border-color: var(--dc-border) !important;
+  box-shadow: none !important;
+}
+#nav-bar {
+  background-color: var(--dc-surface) !important;
+  background-image: none !important;
+  border-color: var(--dc-border) !important;
+  box-shadow: none !important;
+}
+
+/* Вкладки */
+.tabbrowser-tab .tab-background {
+  border-radius: var(--dc-radius) !important;
+}
+.tabbrowser-tab:hover:not([selected]) .tab-background {
+  background-color: var(--dc-raised) !important;
+}
+.tabbrowser-tab[selected] .tab-background {
+  background-color: var(--dc-tab) !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: 1px solid var(--dc-accent, #d4af37) !important;
+  outline-offset: -1px !important;
+}
+
+/* Адресная строка и выпадающий список */
+#urlbar-background {
+  background-color: var(--dc-raised) !important;
+  border: 1px solid var(--dc-border) !important;
+  border-radius: var(--dc-radius) !important;
+}
+#urlbar[focused] > #urlbar-background {
+  border-color: var(--dc-accent, #d4af37) !important;
+  box-shadow: 0 0 0 1px var(--dc-accent, #d4af37) !important;
+}
+.urlbarView {
+  background-color: var(--dc-surface) !important;
+  color: var(--dc-text) !important;
+}
+.urlbarView-row[selected] {
+  background-color: var(--dc-tab) !important;
+}
+
+/* Меню и всплывающие панели */
+menupopup, panel, panelview, .panel-subview-body {
+  background-color: var(--dc-surface) !important;
+  color: var(--dc-text) !important;
+}
+menupopup > :is(menuitem, menu)[_moz-menuactive="true"] {
+  background-color: var(--dc-hover) !important;
+}
+
+/* Подсказка «разместите закладки на панели закладок» */
+#personal-toolbar-empty {
+  display: none !important;
+}

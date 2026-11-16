@@ -1,0 +1,33 @@
+name: Build Dark Crown for Windows
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ['**']
+    paths:
+      - 'windows/**'
+      - '.github/workflows/windows.yml'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install LibreWolf and Inno Setup
+        shell: pwsh
+        run: |
+          choco install librewolf -y --no-progress
+          choco install innosetup -y --no-progress
+          Write-Host ("LibreWolf installed: " + (Test-Path "$env:ProgramFiles\LibreWolf\librewolf.exe"))
+
+      - name: Build installer
+        shell: cmd
+        working-directory: windows
+        run: powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File make-installer.ps1
+
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: DarkCrown-Setup
+          path: windows/dist/DarkCrown-Setup.exe
