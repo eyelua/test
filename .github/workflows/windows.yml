@@ -8,6 +8,9 @@ on:
       - 'windows/**'
       - '.github/workflows/windows.yml'
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: windows-latest
@@ -31,3 +34,12 @@ jobs:
         with:
           name: DarkCrown-Setup
           path: windows/dist/DarkCrown-Setup.exe
+
+      - name: Publish release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        working-directory: ${{ github.workspace }}
+        run: |
+          gh release view windows-latest >/dev/null 2>&1 || gh release create windows-latest --prerelease --target "$GITHUB_SHA" --title "windows-latest" --notes "Automatic build"
+          gh release upload windows-latest windows/dist/DarkCrown-Setup.exe --clobber

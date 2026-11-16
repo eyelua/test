@@ -8,6 +8,9 @@ on:
       - 'android/**'
       - '.github/workflows/android.yml'
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -105,3 +108,12 @@ jobs:
           name: android-build-log
           path: android/build.log
           if-no-files-found: ignore
+
+      - name: Publish release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        working-directory: ${{ github.workspace }}
+        run: |
+          gh release view android-latest >/dev/null 2>&1 || gh release create android-latest --prerelease --target "$GITHUB_SHA" --title "android-latest" --notes "Automatic build"
+          gh release upload android-latest android/DarkCrown.apk --clobber
