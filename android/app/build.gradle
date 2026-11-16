@@ -61,6 +61,14 @@ android {
     }
 }
 
+configurations.all {
+    resolutionStrategy {
+        // newer androidx.core needs AGP 9.1+, which we do not use
+        force "androidx.core:core:1.16.0"
+        force "androidx.core:core-ktx:1.16.0"
+    }
+}
+
 dependencies {
     implementation "org.mozilla.geckoview:${geckoArtifact}:${geckoVersion}"
 }

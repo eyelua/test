@@ -57,6 +57,8 @@ jobs:
           SDKM="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
           yes | "$SDKM" --licenses > /dev/null || true
           "$SDKM" "platforms;android-36" "build-tools;36.0.0" > /dev/null || true
+          "$SDKM" "platforms;android-37.0" > /dev/null 2>&1 || "$SDKM" "platforms;android-37" > /dev/null 2>&1 || true
+          ls "$ANDROID_HOME/platforms"
 
       - name: Create signing key
         shell: bash
