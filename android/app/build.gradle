@@ -9,7 +9,7 @@ if (!geckoVersion) {
     throw new GradleException("Не задана версия GeckoView (geckoVersion). Запусти сборку через GitHub Actions " +
             "или добавь в gradle.properties строки geckoVersion=... и geckoArtifact=geckoview")
 }
-def compileSdkVer = (project.findProperty("compileSdkVersion") ?: "36") as Integer
+def compileSdkVer = (project.findProperty("compileSdkVersion") ?: "37") as Integer
 def keystoreFile = file("release.jks")
 
 android {
@@ -58,14 +58,6 @@ android {
         resources {
             excludes += ['META-INF/AL2.0', 'META-INF/LGPL2.1']
         }
-    }
-}
-
-configurations.all {
-    resolutionStrategy {
-        // newer androidx.core needs AGP 9.1+, which we do not use
-        force "androidx.core:core:1.16.0"
-        force "androidx.core:core-ktx:1.16.0"
     }
 }
 

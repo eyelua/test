@@ -24,7 +24,7 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: '8.13'
+          gradle-version: '9.3.1'
           build-root-directory: android
 
       - name: Find latest GeckoView
@@ -81,7 +81,7 @@ jobs:
           set -o pipefail
           : > build.log
           ok=0
-          for sdk in 36 37; do
+          for sdk in 37; do
             echo "=== compileSdk $sdk ===" | tee -a build.log
             if gradle --no-daemon --stacktrace assembleRelease -PcompileSdkVersion=$sdk 2>&1 | tee -a build.log; then
               ok=1
