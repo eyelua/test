@@ -57,7 +57,10 @@ jobs:
           SDKM="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
           yes | "$SDKM" --licenses > /dev/null || true
           "$SDKM" "platforms;android-36" "build-tools;36.0.0" > /dev/null || true
-          "$SDKM" "platforms;android-37.0" > /dev/null 2>&1 || "$SDKM" "platforms;android-37" > /dev/null 2>&1 || true
+          "$SDKM" --list 2>/dev/null | grep -E "platforms;android-(3[7-9]|4)" || true
+          for p in $("$SDKM" --list 2>/dev/null | grep -oE "platforms;android-3[7-9][^ |]*" | sort -u); do
+            echo "installing $p"; "$SDKM" "$p" > /dev/null || true
+          done
           ls "$ANDROID_HOME/platforms"
 
       - name: Create signing key
