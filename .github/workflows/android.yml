@@ -61,6 +61,10 @@ jobs:
           for p in $("$SDKM" --list 2>/dev/null | grep -oE "platforms;android-3[7-9][^ |]*" | sort -u); do
             echo "installing $p"; "$SDKM" "$p" > /dev/null || true
           done
+          # AGP 8.9 looks for the folder android-37, the SDK installs android-37.0
+          if [ -d "$ANDROID_HOME/platforms/android-37.0" ] && [ ! -e "$ANDROID_HOME/platforms/android-37" ]; then
+            cp -a "$ANDROID_HOME/platforms/android-37.0" "$ANDROID_HOME/platforms/android-37"
+          fi
           ls "$ANDROID_HOME/platforms"
 
       - name: Create signing key
